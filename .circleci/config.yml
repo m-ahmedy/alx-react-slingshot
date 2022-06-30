@@ -4,7 +4,7 @@ jobs:
   build:
     docker:
       - image: node:10-alpine
-    
+
     steps:
       - checkout
       - run:
@@ -14,7 +14,18 @@ jobs:
           name: Build app
           command: npm run lint
 
-  # test:
+  test:
+    docker:
+      - image: node:10-alpine
+
+    steps:
+      - checkout
+      - run:
+          name: Install Node deps
+          command: npm install
+      - run:
+          name: Build app
+          command: npm run test
 
   # analyze:
 
@@ -22,9 +33,9 @@ workflows:
   default:
     jobs:
       - build
-      # - test:
-      #     requires:
-      #     - build
+      - test:
+          requires:
+          - build
       # - analyze:
       #     requires:
       #     - test
