@@ -13,6 +13,10 @@ jobs:
       - run:
           name: Build app
           command: npm run lint
+      - save_cache:
+          key: node-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
 
   test:
     docker:
@@ -20,6 +24,10 @@ jobs:
 
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - node-deps-{{ checksum "package-lock.json" }}
+            - node-deps-
       - run:
           name: Install Node deps
           command: npm install
@@ -33,6 +41,10 @@ jobs:
 
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - node-deps-{{ checksum "package-lock.json" }}
+            - node-deps-
       - run:
           name: Install Node deps
           command: npm install
@@ -46,7 +58,7 @@ workflows:
       - build
       - test:
           requires:
-          - build
+            - build
       - analyze:
           requires:
-          - test
+            - test
